@@ -1,54 +1,38 @@
-from transformers import pipeline
 from app.services.classifier import classify
 from app.services.preprocessing import clean_text, is_likely_email
 
-# Mantemos o gerador apenas como fallback (opcional)
-generator = pipeline(
-    "text2text-generation",
-    model="google/flan-t5-small",
-    max_length=80,
-    do_sample=False
-)
-
-def generate_reply(category, intent, text):
-    # ESTRATÉGIA DE TEMPLATES: Respostas profissionais e garantidas em Português
+def generate_reply(category, intent):
     templates = {
         "Improdutivo": (
-            "Agradecemos o seu contato. No momento, esta mensagem foi classificada como informativa. "
-            "Caso necessite de suporte específico, por favor, entre em contato através dos nossos canais oficiais."
+            "Agradecemos o contato. Caso tenha uma solicitação específica, "
+            "por favor envie mais informações para nossa equipe."
         ),
         "Suporte": (
-            "Recebemos sua solicitação de suporte técnico. Nossa equipe especializada já foi acionada "
-            "para analisar o problema relatado e retornaremos com uma solução o mais breve possível. "
-            "Protocolo de atendimento gerado automaticamente."
+            "Recebemos sua solicitação de suporte técnico. Nossa equipe irá analisar "
+            "o problema e retornaremos em breve com orientações."
         ),
         "Financeiro": (
-            "Prezado(a), sua solicitação financeira foi encaminhada para o setor de contas e faturamento. "
-            "Aguarde o prazo de até 24h úteis para uma posição detalhada sobre sua demanda."
+            "Sua solicitação financeira foi encaminhada ao setor responsável. "
+            "Em até 24h úteis retornaremos com uma posição."
         ),
         "Comercial": (
-            "Obrigado pelo interesse! Encaminhamos sua mensagem para um de nossos consultores comerciais. "
-            "Em breve entraremos em contato para dar continuidade ao seu atendimento."
+            "Obrigado pelo interesse. Um de nossos consultores comerciais "
+            "entrará em contato em breve."
         ),
         "Outro": (
-            "Agradecemos sua mensagem. Ela foi recebida por nossa triagem automática e será "
-            "direcionada ao departamento responsável para análise."
+            "Sua mensagem foi recebida e será direcionada ao setor responsável."
         )
     }
 
-    # Se for improdutivo, retorna direto o template
     if category == "Improdutivo":
         return templates["Improdutivo"]
 
-    # Busca o template baseado na intenção, se não achar usa "Outro"
-    reply = templates.get(intent, templates["Outro"])
-    
-    return reply
+    return templates.get(intent, templates["Outro"])
+
 
 def build_response(text: str):
     cleaned = clean_text(text)
 
-    # Valida se parece email
     if not is_likely_email(text.lower()):
         return {
             "category": "Improdutivo",
@@ -61,15 +45,9 @@ def build_response(text: str):
             "source": "rules"
         }
 
-    # Chama seu classificador de Machine Learning (que já está funcionando!)
     result = classify(text, cleaned)
 
-    # Gera a resposta usando os templates seguros
-    reply = generate_reply(
-        result["category"],
-        result["intent"],
-        text[:400]
-    )
+    reply = generate_reply(result["category"], result["intent"])
 
     return {
         "category": result["category"],

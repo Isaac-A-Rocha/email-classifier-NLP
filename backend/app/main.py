@@ -6,10 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse   
 from app.api.routes import router
 
-# Downloads necessários para o processamento de texto
-nltk.download('stopwords')
-nltk.download('rslp')
-nltk.download('punkt')
+
 
 app = FastAPI(title="Email Classifier API")
 

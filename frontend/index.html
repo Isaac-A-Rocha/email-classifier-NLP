@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoClassify | Email Triage AI</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header>
+    <h1>AutoClassify</h1>
+    <p>Classificação Inteligente de Emails Corporativos</p>
+</header>
+
+<main class="container">
+
+    <section class="card input-area">
+        <h2>Enviar Email</h2>
+
+        <div class="input-group">
+            <label for="emailSubject" style="font-size: 12px; color: var(--muted); margin-bottom: 5px; display: block;">Assunto (opcional):</label>
+            <input type="text" id="emailSubject" placeholder="Ex: Solicitação de Informe de Rendimentos..." class="input-field" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; font-family: inherit;">
+        </div>
+
+        <div class="input-group">
+            <label for="emailText" style="font-size: 12px; color: var(--muted); margin-bottom: 5px; display: block;">Corpo do Email:</label>
+            <textarea id="emailText" placeholder="Cole aqui o conteúdo principal do email..."></textarea>
+        </div>
+
+        <div id="dropZone" class="file-area">
+            <p>Arraste um arquivo aqui ou clique para selecionar (.txt ou .pdf)</p>
+
+            <label class="file-btn">
+                Selecionar arquivo
+                <input type="file" id="fileInput" accept=".txt,.pdf" hidden />
+            </label>
+
+            <span id="fileName" class="file-name">Nenhum arquivo selecionado</span>
+        </div>
+
+        <div id="errorBox" class="error hidden"></div>
+
+        <button id="analyzeBtn">Analisar Email</button>
+
+        <div id="loading" class="hidden loading-box">
+            <div class="spinner"></div>
+            <span>Processando via IA...</span>
+        </div>
+    </section>
+
+    <section class="card result-area">
+        <h2>Resultado da Análise</h2>
+
+        <div id="resultBox" class="hidden">
+            <p style="font-weight: bold; margin-bottom: 5px;">Prévia do conteúdo processado:</p>
+            <div id="previewBox" class="preview-box"></div>
+
+            <div class="result-details">
+                <div class="status-row">
+                    <p><strong>Categoria:</strong> <span id="categoryBadge" class="badge"></span></p>
+                    <p><strong>Intenção:</strong> <span id="intentText" style="font-weight: bold; padding: 2px 6px; border-radius: 4px;"></span></p>
+                </div>
+                
+                <p><strong>Confiança do Modelo:</strong> <span id="confidenceValue"></span></p>
+                <div class="confidence-bar">
+                    <div id="confidenceFill"></div>
+                </div>
+
+                <p style="font-size: 11px; color: var(--muted); margin-top: 15px;">
+                    Tecnologia: <span id="sourceBadge" style="font-style: italic; font-weight: 500;"></span>
+                </p>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+
+            <p style="font-weight: bold;">Sugestão de Resposta Automática:</p>
+            <div id="responseBox" class="response-text" style="background: #f9f9f9; padding: 15px; border-radius: 8px; border-left: 4px solid var(--primary); margin: 10px 0; font-style: italic;"></div>
+            
+            <button id="copyBtn" class="clear-btn" style="width: 100%; background-color: var(--primary); color: white; border: none; padding: 10px; cursor: pointer;">
+                Copiar Resposta
+            </button>
+        </div>
+    </section>
+
+    <aside class="card history-area">
+        <h2>Histórico Recente</h2>
+        <ul id="historyList"></ul>
+        <button id="clearHistoryBtn" class="clear-btn" style="width: 100%; margin-top: 10px;">Limpar histórico</button>
+    </aside>
+
+</main>
+
+<footer>
+    <p style="text-align: center; color: var(--muted); font-size: 12px; margin-top: 20px;">
+        AutoClassify v2.0 - Sistema Híbrido de Inteligência Artificial para o Setor Financeiro
+    </p>
+</footer>
+
+<script src="js/script.js" defer></script>
+</body>
+</html>
